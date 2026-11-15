@@ -1,0 +1,20 @@
+name: Validate TERRY CITY
+on:
+  push:
+  pull_request:
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check worker syntax
+        run: |
+          if [ -f worker.js ]; then
+            node --check worker.js
+            node scripts/check-embedded.mjs worker.js
+          else
+            echo 'worker.js not committed yet; skipping source checks'
+          fi
